@@ -3,10 +3,11 @@
 #include "Maze/Maze.h"
 
 int main() {
-  int rows{6};
-  int cols{6};
+  // int rows{6};
+  // int cols{6};
   s21::Maze maze;
-  maze.PerfectMazeGen(rows, cols);
+  // maze.PerfectMazeGen(rows, cols);
+  maze.ReadMaze("/Users/sullustd/Maze/src/Examples/1.txt");
   std::vector<std::vector<int>*> right = maze.getRight();
   std::vector<std::vector<int>*> down = maze.getDown();
 

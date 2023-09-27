@@ -10,4 +10,6 @@ std::vector<std::vector<int> *> s21::Controler::getRight() {
 
 std::vector<std::vector<int> *> s21::Controler::getDown() {
   return maze->getDown();
-};
+}
+
+void s21::Controler::ReadMaze(std::string fpath) { maze->ReadMaze(fpath); }

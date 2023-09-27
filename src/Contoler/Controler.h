@@ -5,6 +5,7 @@ class Controler {
  public:
   Controler(s21::Maze *new_maze) : maze{new_maze} {};
   void PerfectMazeGen(int rows, int cols);
+  void ReadMaze(std::string fpath);
   std::vector<std::vector<int> *> getRight();
   std::vector<std::vector<int> *> getDown();
 
