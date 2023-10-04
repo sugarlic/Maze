@@ -41,6 +41,8 @@ private:
     int color_{};
     void MazeDraw(QGraphicsScene* scene);
     void DrawMazeSolution(std::vector<std::vector<int>> v);
-
+    bool IsCorrectPoints();
+    void ClearSolution();
+    void ClearPoints();
 };
 #endif // MAINWINDOW_H

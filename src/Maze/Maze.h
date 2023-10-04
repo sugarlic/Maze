@@ -16,5 +16,6 @@ class Maze {
   void MatrixInitialization(int rows, int cols);
   void SaveMaze();
   void StepWave(std::vector<std::vector<int>> &path, int i, int j, int step);
+  void ClearMaze();
 };
 }  // namespace s21

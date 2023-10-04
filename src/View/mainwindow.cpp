@@ -16,15 +16,17 @@ MainWindow::MainWindow(QWidget* parent, s21::Maze* maze)
 MainWindow::~MainWindow() { delete ui; }
 
 void MainWindow::on_pushButton_clicked() {
-  QGraphicsScene* scene = new QGraphicsScene(ui->graphicsView);
-  ui->graphicsView->setScene(scene);
-
   try {
     controler_.PerfectMazeGen(ui->textEdit_rows->toPlainText().toInt(),
                               ui->textEdit_cols->toPlainText().toInt());
   } catch (...) {
     return;  // исправить!!!
   }
+
+  ClearSolution();
+  ClearPoints();
+  QGraphicsScene* scene = new QGraphicsScene(ui->graphicsView);
+  ui->graphicsView->setScene(scene);
 
   right_ = controler_.getRight();
   down_ = controler_.getDown();
@@ -42,14 +44,17 @@ void MainWindow::on_ReadMaze_clicked() {
   if (fileDialog.exec()) {
     filename = fileDialog.selectedFiles().at(0);
   }
-  QGraphicsScene* scene = new QGraphicsScene(ui->graphicsView);
-  ui->graphicsView->setScene(scene);
 
   try {
     controler_.ReadMaze(filename.toStdString());
   } catch (...) {
     return;  // исправить!!!
   }
+
+  ClearSolution();
+  ClearPoints();
+  QGraphicsScene* scene = new QGraphicsScene(ui->graphicsView);
+  ui->graphicsView->setScene(scene);
 
   right_ = controler_.getRight();
   down_ = controler_.getDown();
@@ -105,8 +110,10 @@ void MainWindow::MazeDraw(QGraphicsScene* scene) {
 }
 
 void MainWindow::mousePressEvent(QMouseEvent* event) {
-  if (event->button() != Qt::LeftButton || !ui->graphicsView->scene()) return;
+  if (event->button() != Qt::LeftButton || !ui->graphicsView->scene()
+          || ui->graphicsView->size().width() <= 0 || ui->graphicsView->size().height() <= 0) return;
   QPoint pos = event->pos();
+  qDebug() << right_.size()<<right_[0]->size();
   int cell_widht = ui->graphicsView->size().width() / right_[0]->size() -
                  (ui->graphicsView->size().width() / right_[0]->size()) / 10;
   int cell_height = ui->graphicsView->size().height() / right_.size() -
@@ -124,6 +131,7 @@ void MainWindow::mousePressEvent(QMouseEvent* event) {
 
       while(solution_items_.size() > 0) {
           ui->graphicsView->scene()->removeItem(solution_items_.top());
+          delete solution_items_.top();
           solution_items_.pop();
       }
     }
@@ -145,7 +153,6 @@ void MainWindow::mousePressEvent(QMouseEvent* event) {
 
     point_items_.push(point);
     ++color_;
-    qDebug()<<"size = "<<point_items_.size();
     begin_end_.push_back(std::make_pair(y_pos/cell_height, x_pos/cell_widht));
   }
 }
@@ -153,6 +160,7 @@ void MainWindow::mousePressEvent(QMouseEvent* event) {
 void MainWindow::DrawMazeSolution(std::vector<std::vector<int>> v) {
     while(solution_items_.size() > 0) {
         ui->graphicsView->scene()->removeItem(solution_items_.top());
+        delete solution_items_.top();
         solution_items_.pop();
     }
     int cell_widht = ui->graphicsView->size().width() / right_[0]->size() -
@@ -207,9 +215,33 @@ void MainWindow::DrawMazeSolution(std::vector<std::vector<int>> v) {
 
 void MainWindow::on_pushButton_Maze_Solve_clicked()
 {
-    if (begin_end_.size() == 2) {
+    if (begin_end_.size() != 2) return;
+    if (IsCorrectPoints()) {
         std::vector<std::vector<int>>res = controler_.MazeSolve(begin_end_);
         DrawMazeSolution(res);
     }
 }
 
+bool MainWindow::IsCorrectPoints() {
+    for (int i = 0; i < 2; i++) {
+        if (begin_end_[i].first < 0 || begin_end_[i].first >= right_.size()
+                || begin_end_[i].second < 0 || begin_end_[i].second >= right_[0]->size()) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void MainWindow::ClearSolution() {
+    while(!solution_items_.empty()) {
+        delete solution_items_.top();
+        solution_items_.pop();
+    }
+}
+
+void MainWindow::ClearPoints() {
+    begin_end_.clear();
+    while(!point_items_.empty()) {
+        point_items_.pop();
+    }
+}

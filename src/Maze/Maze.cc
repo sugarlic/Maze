@@ -7,6 +7,7 @@
 #include <sstream>
 
 void s21::Maze::PerfectMazeGen(int rows, int cols) {
+  ClearMaze();
   if ((rows <= 0 || cols <= 0) || rows > 50 || cols > 50)
     throw std::invalid_argument("ERROR");
 
@@ -77,7 +78,7 @@ void s21::Maze::ReadMaze(std::string fpath) {
   fin >> rows >> cols;
   if (rows < 1 || rows > 50 || cols < 1 || cols > 50)
     throw std::invalid_argument("INCORRECT FILE");
-
+  ClearMaze();
   MatrixInitialization(rows, cols);
   for (int i = 0; i < rows; i++) {
     for (int j = 0; j < cols; j++) {
@@ -163,5 +164,12 @@ void s21::Maze::MatrixInitialization(int rows, int cols) {
   for (int i = 0; i < rows; i++) {
     right_[i] = new std::vector<int>(cols);
     down_[i] = new std::vector<int>(cols);
+  }
+}
+
+void s21::Maze::ClearMaze() {
+  for (int i = 0; i < right_.size(); i++) {
+    delete right_[i];
+    delete down_[i];
   }
 }

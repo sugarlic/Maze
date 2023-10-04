@@ -938,6 +938,10 @@ compiler_moc_header_clean:
 moc_mainwindow.cpp: mainwindow.h \
 		/usr/local/lib/QtWidgets.framework/Headers/QMainWindow \
 		/usr/local/lib/QtWidgets.framework/Headers/qmainwindow.h \
+		/usr/local/lib/QtWidgets.framework/Headers/QGraphicsRectItem \
+		/usr/local/lib/QtWidgets.framework/Headers/qgraphicsitem.h \
+		/usr/local/lib/QtWidgets.framework/Headers/QGraphicsScene \
+		/usr/local/lib/QtWidgets.framework/Headers/qgraphicsscene.h \
 		../Contoler/Controler.h \
 		../Maze/Maze.h \
 		moc_predefs.h \
@@ -977,6 +981,10 @@ Maze.o: ../Maze/Maze.cc ../Maze/Maze.h
 main.o: main.cpp mainwindow.h \
 		/usr/local/lib/QtWidgets.framework/Headers/QMainWindow \
 		/usr/local/lib/QtWidgets.framework/Headers/qmainwindow.h \
+		/usr/local/lib/QtWidgets.framework/Headers/QGraphicsRectItem \
+		/usr/local/lib/QtWidgets.framework/Headers/qgraphicsitem.h \
+		/usr/local/lib/QtWidgets.framework/Headers/QGraphicsScene \
+		/usr/local/lib/QtWidgets.framework/Headers/qgraphicsscene.h \
 		../Contoler/Controler.h \
 		../Maze/Maze.h \
 		/usr/local/lib/QtWidgets.framework/Headers/QApplication \
@@ -986,12 +994,22 @@ main.o: main.cpp mainwindow.h \
 mainwindow.o: mainwindow.cpp mainwindow.h \
 		/usr/local/lib/QtWidgets.framework/Headers/QMainWindow \
 		/usr/local/lib/QtWidgets.framework/Headers/qmainwindow.h \
-		../Contoler/Controler.h \
-		../Maze/Maze.h \
 		/usr/local/lib/QtWidgets.framework/Headers/QGraphicsRectItem \
 		/usr/local/lib/QtWidgets.framework/Headers/qgraphicsitem.h \
 		/usr/local/lib/QtWidgets.framework/Headers/QGraphicsScene \
 		/usr/local/lib/QtWidgets.framework/Headers/qgraphicsscene.h \
+		../Contoler/Controler.h \
+		../Maze/Maze.h \
+		/usr/local/lib/QtCore.framework/Headers/QDebug \
+		/usr/local/lib/QtCore.framework/Headers/qdebug.h \
+		/usr/local/lib/QtCore.framework/Headers/QDir \
+		/usr/local/lib/QtCore.framework/Headers/qdir.h \
+		/usr/local/lib/QtCore.framework/Headers/QFile \
+		/usr/local/lib/QtCore.framework/Headers/qfile.h \
+		/usr/local/lib/QtWidgets.framework/Headers/QFileDialog \
+		/usr/local/lib/QtWidgets.framework/Headers/qfiledialog.h \
+		/usr/local/lib/QtGui.framework/Headers/QMouseEvent \
+		/usr/local/lib/QtGui.framework/Headers/qevent.h \
 		ui_mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o mainwindow.cpp
 
