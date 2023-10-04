@@ -3,24 +3,14 @@
 #include "Maze/Maze.h"
 
 int main() {
-  // int rows{6};
-  // int cols{6};
   s21::Maze maze;
-  // maze.PerfectMazeGen(rows, cols);
   maze.ReadMaze("/Users/sullustd/Maze/src/Examples/1.txt");
-  std::vector<std::vector<int>*> right = maze.getRight();
-  std::vector<std::vector<int>*> down = maze.getDown();
+  std::vector<std::pair<int, int>> v{{0, 0}, {5, 5}};
+  std::vector<std::vector<int>> res = maze.MazeSolve(v);
 
-  for (size_t i = 0; i < right.size(); i++) {
-    for (size_t j = 0; j < right[0]->size(); j++) {
-      std::cout << right[i]->operator[](j) << ' ';
-    }
-    std::cout << '\n';
-  }
-  std::cout << '\n' << '\n';
-  for (size_t i = 0; i < down.size(); i++) {
-    for (size_t j = 0; j < down[0]->size(); j++) {
-      std::cout << down[i]->operator[](j) << ' ';
+  for (size_t i = 0; i < res.size(); i++) {
+    for (size_t j = 0; j < res[0].size(); j++) {
+      std::cout << res[i][j] << ' ';
     }
     std::cout << '\n';
   }

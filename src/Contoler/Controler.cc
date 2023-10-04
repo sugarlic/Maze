@@ -1,15 +1,20 @@
 #include "Controler.h"
 
 void s21::Controler::PerfectMazeGen(int rows, int cols) {
-  maze->PerfectMazeGen(rows, cols);
+  maze_->PerfectMazeGen(rows, cols);
 }
 
 std::vector<std::vector<int> *> s21::Controler::getRight() {
-  return maze->getRight();
+  return maze_->getRight();
 }
 
 std::vector<std::vector<int> *> s21::Controler::getDown() {
-  return maze->getDown();
+  return maze_->getDown();
 }
 
-void s21::Controler::ReadMaze(std::string fpath) { maze->ReadMaze(fpath); }
+void s21::Controler::ReadMaze(std::string fpath) { maze_->ReadMaze(fpath); }
+
+std::vector<std::vector<int>> s21::Controler::MazeSolve(
+    std::vector<std::pair<int, int>> v) {
+  return maze_->MazeSolve(v);
+}

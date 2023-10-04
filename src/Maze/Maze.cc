@@ -1,11 +1,10 @@
 #include "Maze.h"
 
 #include <chrono>
-#include <ctime>
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <sstream>
-// ИЗМЕНИТЬ СОХРАНЕНИЕ ФАЙЛА
 
 void s21::Maze::PerfectMazeGen(int rows, int cols) {
   if ((rows <= 0 || cols <= 0) || rows > 50 || cols > 50)
@@ -93,6 +92,41 @@ void s21::Maze::ReadMaze(std::string fpath) {
   }
 
   fin.close();
+}
+
+std::vector<std::vector<int>> s21::Maze::Maze::MazeSolve(
+    std::vector<std::pair<int, int>> v) {
+  if (right_.empty()) throw std::invalid_argument("ERROR");
+  std::vector<std::vector<int>> path(right_.size(),
+                                     std::vector<int>(right_[0]->size()));
+  for (int i = 0; i < path.size(); i++) {
+    for (int j = 0; j < path[0].size(); j++) {
+      path[i][j] = -1;
+    }
+  }
+
+  StepWave(path, v.front().first, v.front().second, 0);
+
+  return path;
+}
+
+void s21::Maze::StepWave(std::vector<std::vector<int>> &path, int i, int j,
+                         int step) {
+  if (path[i][j] != -1) return;
+  path[i][j] = step;
+
+  if (i > 0 && down_[i - 1]->operator[](j) != 1) {
+    StepWave(path, i - 1, j, step + 1);
+  }
+  if (j > 0 && right_[i]->operator[](j - 1) != 1) {
+    StepWave(path, i, j - 1, step + 1);
+  }
+  if (i < path.size() - 1 && down_[i]->operator[](j) != 1) {
+    StepWave(path, i + 1, j, step + 1);
+  }
+  if (j < path[0].size() - 1 && right_[i]->operator[](j) != 1) {
+    StepWave(path, i, j + 1, step + 1);
+  }
 }
 
 void s21::Maze::SaveMaze() {
