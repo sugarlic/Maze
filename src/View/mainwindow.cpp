@@ -170,7 +170,7 @@ void MainWindow::DrawMazeSolution(std::vector<std::vector<int>> v) {
     int i = begin_end_.back().first;
     int j = begin_end_.back().second;
     QPen pen;
-    pen.setWidth(2);
+    pen.setWidth(1);
     pen.setColor(Qt::red);
     while(v[i][j] != 0) {
         if (i > 0 && down_[i - 1]->operator[](j) != 1 && v[i - 1][j] == v[i][j] - 1) {

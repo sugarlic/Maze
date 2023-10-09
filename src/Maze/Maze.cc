@@ -7,10 +7,10 @@
 #include <sstream>
 
 void s21::Maze::PerfectMazeGen(int rows, int cols) {
-  ClearMaze();
   if ((rows <= 0 || cols <= 0) || rows > 50 || cols > 50)
     throw std::invalid_argument("ERROR");
 
+  ClearMaze();
   std::vector<std::vector<int>> matrix(rows, std::vector<int>(cols));
   MatrixInitialization(rows, cols);
   std::srand(std::time(0));
@@ -100,8 +100,8 @@ std::vector<std::vector<int>> s21::Maze::Maze::MazeSolve(
   if (right_.empty()) throw std::invalid_argument("ERROR");
   std::vector<std::vector<int>> path(right_.size(),
                                      std::vector<int>(right_[0]->size()));
-  for (int i = 0; i < path.size(); i++) {
-    for (int j = 0; j < path[0].size(); j++) {
+  for (size_t i = 0; i < path.size(); i++) {
+    for (size_t j = 0; j < path[0].size(); j++) {
       path[i][j] = -1;
     }
   }
@@ -111,8 +111,8 @@ std::vector<std::vector<int>> s21::Maze::Maze::MazeSolve(
   return path;
 }
 
-void s21::Maze::StepWave(std::vector<std::vector<int>> &path, int i, int j,
-                         int step) {
+void s21::Maze::StepWave(std::vector<std::vector<int>> &path, size_t i,
+                         size_t j, int step) {
   if (path[i][j] != -1) return;
   path[i][j] = step;
 
@@ -168,7 +168,7 @@ void s21::Maze::MatrixInitialization(int rows, int cols) {
 }
 
 void s21::Maze::ClearMaze() {
-  for (int i = 0; i < right_.size(); i++) {
+  for (size_t i = 0; i < right_.size(); i++) {
     delete right_[i];
     delete down_[i];
   }
