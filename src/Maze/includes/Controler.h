@@ -1,4 +1,4 @@
-#include "../Maze/Maze.h"
+#include "../../backend/includes/Maze.h"
 
 namespace s21 {
 class Controler {

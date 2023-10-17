@@ -1,4 +1,4 @@
-#include "Maze.h"
+#include "../includes/Maze.h"
 
 #include <chrono>
 #include <fstream>
