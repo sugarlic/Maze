@@ -8,7 +8,8 @@ class Maze {
   std::vector<std::vector<int> *> getRight() { return right_; };
   std::vector<std::vector<int> *> getDown() { return down_; };
   void ReadMaze(std::string fpath);
-  std::vector<std::vector<int>> MazeSolve(std::vector<std::pair<int, int>> v);
+  std::pair<std::vector<std::vector<int>>, bool> MazeSolve(
+      std::vector<std::pair<int, int>> v);
 
  private:
   std::vector<std::vector<int> *> right_;

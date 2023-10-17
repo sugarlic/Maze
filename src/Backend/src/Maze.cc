@@ -95,7 +95,7 @@ void s21::Maze::ReadMaze(std::string fpath) {
   fin.close();
 }
 
-std::vector<std::vector<int>> s21::Maze::Maze::MazeSolve(
+std::pair<std::vector<std::vector<int>>, bool> s21::Maze::Maze::MazeSolve(
     std::vector<std::pair<int, int>> v) {
   if (right_.empty()) throw std::invalid_argument("ERROR");
   std::vector<std::vector<int>> path(right_.size(),
@@ -108,7 +108,15 @@ std::vector<std::vector<int>> s21::Maze::Maze::MazeSolve(
 
   StepWave(path, v.front().first, v.front().second, 0);
 
-  return path;
+  bool res{true};
+
+  for (size_t i = 0; i < path.size(); i++) {
+    for (size_t j = 0; j < path[0].size(); j++) {
+      if (path[i][j] == -1) res = false;
+    }
+  }
+
+  return std::make_pair(path, res);
 }
 
 void s21::Maze::StepWave(std::vector<std::vector<int>> &path, size_t i,

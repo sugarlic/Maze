@@ -14,7 +14,7 @@ std::vector<std::vector<int> *> s21::Controler::getDown() {
 
 void s21::Controler::ReadMaze(std::string fpath) { maze_->ReadMaze(fpath); }
 
-std::vector<std::vector<int>> s21::Controler::MazeSolve(
+std::pair<std::vector<std::vector<int>>, bool> s21::Controler::MazeSolve(
     std::vector<std::pair<int, int>> v) {
   return maze_->MazeSolve(v);
 }

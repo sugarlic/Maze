@@ -39,7 +39,6 @@ void MainWindow::on_ReadMaze_clicked() {
   fileDialog.setWindowTitle("Выберите директорию");
   fileDialog.setFileMode(QFileDialog::ExistingFile);
 
-  fileDialog.setDirectory("../../../../");
 
   if (fileDialog.exec()) {
     filename = fileDialog.selectedFiles().at(0);
@@ -62,30 +61,31 @@ void MainWindow::on_ReadMaze_clicked() {
 }
 
 void MainWindow::MazeDraw(QGraphicsScene* scene) {
+  QSize widget_size = ui->graphicsView->size();
   int rows = right_.size();
   int cols = right_[0]->size();
 
   int xOffset = 0;
   int yOffset = 0;
-  int cell_widht = ui->graphicsView->size().width() / cols -
-                 (ui->graphicsView->size().width() / cols) / 10;
-  int cell_height = ui->graphicsView->size().height() / rows -
-                 (ui->graphicsView->size().height() / rows) / 10;
+  int cell_widht = widget_size.width() / cols -
+                   (widget_size.width() / cols) / 10;
+  int cell_height = widget_size.height() / rows -
+                    (widget_size.height() / rows) / 10;
   QPen pen;
   pen.setWidth(2);
   pen.setColor(Qt::gray);
   for (int i = 0; i < rows; i++) {
     for (int j = 0; j < cols; j++) {
       if (j == 0) {
-        QGraphicsRectItem* rightWall =
-            new QGraphicsRectItem(xOffset, i * cell_height + yOffset, 1, cell_height);
+        QGraphicsRectItem* rightWall = new QGraphicsRectItem(
+            xOffset, i * cell_height + yOffset, 1, cell_height);
         rightWall->setPen(pen);
         scene->addItem(rightWall);
       }
 
       if (i == 0) {
-        QGraphicsRectItem* downWall =
-            new QGraphicsRectItem(j * cell_widht + xOffset, yOffset, cell_widht, 1);
+        QGraphicsRectItem* downWall = new QGraphicsRectItem(
+            j * cell_widht + xOffset, yOffset, cell_widht, 1);
         downWall->setPen(pen);
         scene->addItem(downWall);
       }
@@ -99,9 +99,9 @@ void MainWindow::MazeDraw(QGraphicsScene* scene) {
       }
 
       if (down_[i]->operator[](j) == 1) {
-        QGraphicsRectItem* downWall =
-                new QGraphicsRectItem(j * cell_widht + xOffset, i * cell_height + yOffset + cell_height,
-                                      cell_widht, 1);
+        QGraphicsRectItem* downWall = new QGraphicsRectItem(
+            j * cell_widht + xOffset, i * cell_height + yOffset + cell_height,
+            cell_widht, 1);
         downWall->setPen(pen);
         scene->addItem(downWall);
       }
@@ -110,34 +110,32 @@ void MainWindow::MazeDraw(QGraphicsScene* scene) {
 }
 
 void MainWindow::mousePressEvent(QMouseEvent* event) {
-  if (event->button() != Qt::LeftButton || !ui->graphicsView->scene()
-          || ui->graphicsView->size().width() <= 0 || ui->graphicsView->size().height() <= 0) return;
+  QSize widget_size = ui->graphicsView->size();
+  QGraphicsScene *scene = ui->graphicsView->scene();
+  if (event->button() != Qt::LeftButton || !scene ||
+      widget_size.width() <= 0 ||
+      widget_size.height() <= 0)
+    return;
   QPoint pos = event->pos();
-  qDebug() << right_.size()<<right_[0]->size();
-  int cell_widht = ui->graphicsView->size().width() / right_[0]->size() -
-                 (ui->graphicsView->size().width() / right_[0]->size()) / 10;
-  int cell_height = ui->graphicsView->size().height() / right_.size() -
-                 (ui->graphicsView->size().height() / right_.size()) / 10;
+  int cell_widht = widget_size.width() / right_[0]->size() -
+                   (widget_size.width() / right_[0]->size()) / 10;
+  int cell_height = widget_size.height() / right_.size() -
+                    (widget_size.height() / right_.size()) / 10;
 
-  if (pos.x() > cell_widht/2 &&
-          pos.x() < ui->graphicsView->size().width() - cell_widht/2 &&
-          pos.y() > cell_height/2 &&
-          pos.y() < ui->graphicsView->size().height() - cell_height/2) {
-
+  if (pos.x() > cell_widht / 2 &&
+      pos.x() < widget_size.width() - cell_widht / 2 &&
+      pos.y() > cell_height / 2 &&
+      pos.y() < widget_size.height() - cell_height / 2) {
     if (point_items_.size() > 1) {
       begin_end_.erase(begin_end_.begin());
-      ui->graphicsView->scene()->removeItem(point_items_.front());
+      scene->removeItem(point_items_.front());
       point_items_.pop();
 
-      while(solution_items_.size() > 0) {
-          ui->graphicsView->scene()->removeItem(solution_items_.top());
-          delete solution_items_.top();
-          solution_items_.pop();
-      }
+      ClearSolution();
     }
 
-    int x_pos = ui->graphicsView->scene()->width() - 500 + pos.x();
-    int y_pos = ui->graphicsView->scene()->height() - 500 + pos.y();
+    int x_pos = scene->width() - 500 + pos.x();
+    int y_pos = scene->height() - 500 + pos.y();
     x_pos = (x_pos - x_pos % cell_widht) + cell_widht / 2;
     y_pos = (y_pos - y_pos % cell_height) + cell_height / 2;
 
@@ -149,99 +147,99 @@ void MainWindow::mousePressEvent(QMouseEvent* event) {
     else
       point_pen.setColor(Qt::green);
     point->setPen(point_pen);
-    ui->graphicsView->scene()->addItem(point);
+    scene->addItem(point);
 
     point_items_.push(point);
     ++color_;
-    begin_end_.push_back(std::make_pair(y_pos/cell_height, x_pos/cell_widht));
+    begin_end_.push_back(
+        std::make_pair(y_pos / cell_height, x_pos / cell_widht));
   }
 }
 
 void MainWindow::DrawMazeSolution(std::vector<std::vector<int>> v) {
-    while(solution_items_.size() > 0) {
-        ui->graphicsView->scene()->removeItem(solution_items_.top());
-        delete solution_items_.top();
-        solution_items_.pop();
-    }
-    int cell_widht = ui->graphicsView->size().width() / right_[0]->size() -
-                   (ui->graphicsView->size().width() / right_[0]->size()) / 10;
-    int cell_height = ui->graphicsView->size().height() / right_.size() -
-                   (ui->graphicsView->size().height() / right_.size()) / 10;
-    int i = begin_end_.back().first;
-    int j = begin_end_.back().second;
-    QPen pen;
-    pen.setWidth(1);
-    pen.setColor(Qt::red);
-    while(v[i][j] != 0) {
-        if (i > 0 && down_[i - 1]->operator[](j) != 1 && v[i - 1][j] == v[i][j] - 1) {
-            QGraphicsRectItem* right_wall =
-                new QGraphicsRectItem(j * cell_widht + cell_widht/2,
-                                      i * cell_height - cell_height/2, 1, cell_height);
-            right_wall->setPen(pen);
-            ui->graphicsView->scene()->addItem(right_wall);
-            solution_items_.push(right_wall);
-            i--;
-        }
-        else if (i < right_.size() - 1 && down_[i]->operator[](j) != 1 && v[i + 1][j] == v[i][j] - 1) {
-            QGraphicsRectItem* right_wall =
-                new QGraphicsRectItem(j * cell_widht + cell_widht/2,
-                                      i * cell_height + cell_height/2, 1, cell_height);
-            right_wall->setPen(pen);
-            ui->graphicsView->scene()->addItem(right_wall);
-            solution_items_.push(right_wall);
-            i++;
-        }
-        else if (j > 0 && right_[i]->operator[](j - 1) != 1 && v[i][j - 1] == v[i][j] - 1) {
-            QGraphicsRectItem* down_wall =
-                new QGraphicsRectItem(j * cell_widht - cell_widht/2,
-                                      i * cell_height + cell_height/2, cell_widht, 1);
-            down_wall->setPen(pen);
-            ui->graphicsView->scene()->addItem(down_wall);
-            solution_items_.push(down_wall);
-            j--;
-        }
-        else if (j < right_[0]->size() - 1 && right_[i]->operator[](j) != 1 && v[i][j + 1] == v[i][j] - 1) {
-            QGraphicsRectItem* down_wall =
-                new QGraphicsRectItem(j * cell_widht + cell_widht/2,
-                                      i * cell_height + cell_height/2, cell_widht, 1);
-            down_wall->setPen(pen);
-            ui->graphicsView->scene()->addItem(down_wall);
-            solution_items_.push(down_wall);
-            j++;
-        }
-    }
+  QSize widget_size = ui->graphicsView->size();
+  QGraphicsScene *scene = ui->graphicsView->scene();
+  ClearSolution();
 
+  int cell_widht = widget_size.width() / right_[0]->size() -
+                   (widget_size.width() / right_[0]->size()) / 10;
+  int cell_height = widget_size.height() / right_.size() -
+                    (widget_size.height() / right_.size()) / 10;
+  size_t i = begin_end_.back().first;
+  size_t j = begin_end_.back().second;
+  QPen pen;
+  pen.setWidth(1);
+  pen.setColor(Qt::red);
+  while (v[i][j] != 0) {
+    if (i > 0 && down_[i - 1]->operator[](j) != 1 &&
+        v[i - 1][j] == v[i][j] - 1) {
+      QGraphicsRectItem* right_wall = new QGraphicsRectItem(
+          j * cell_widht + cell_widht / 2, i * cell_height - cell_height / 2, 1,
+          cell_height);
+      right_wall->setPen(pen);
+      scene->addItem(right_wall);
+      solution_items_.push(right_wall);
+      i--;
+    } else if (i < right_.size() - 1 && down_[i]->operator[](j) != 1 &&
+               v[i + 1][j] == v[i][j] - 1) {
+      QGraphicsRectItem* right_wall = new QGraphicsRectItem(
+          j * cell_widht + cell_widht / 2, i * cell_height + cell_height / 2, 1,
+          cell_height);
+      right_wall->setPen(pen);
+      scene->addItem(right_wall);
+      solution_items_.push(right_wall);
+      i++;
+    } else if (j > 0 && right_[i]->operator[](j - 1) != 1 &&
+               v[i][j - 1] == v[i][j] - 1) {
+      QGraphicsRectItem* down_wall = new QGraphicsRectItem(
+          j * cell_widht - cell_widht / 2, i * cell_height + cell_height / 2,
+          cell_widht, 1);
+      down_wall->setPen(pen);
+      scene->addItem(down_wall);
+      solution_items_.push(down_wall);
+      j--;
+    } else if (j < right_[0]->size() - 1 && right_[i]->operator[](j) != 1 &&
+               v[i][j + 1] == v[i][j] - 1) {
+      QGraphicsRectItem* down_wall = new QGraphicsRectItem(
+          j * cell_widht + cell_widht / 2, i * cell_height + cell_height / 2,
+          cell_widht, 1);
+      down_wall->setPen(pen);
+      scene->addItem(down_wall);
+      solution_items_.push(down_wall);
+      j++;
+    }
+  }
 }
 
-void MainWindow::on_pushButton_Maze_Solve_clicked()
-{
-    if (begin_end_.size() != 2) return;
-    if (IsCorrectPoints()) {
-        std::vector<std::vector<int>>res = controler_.MazeSolve(begin_end_);
-        DrawMazeSolution(res);
-    }
+void MainWindow::on_pushButton_Maze_Solve_clicked() {
+  if (begin_end_.size() != 2) return;
+  if (IsCorrectPoints()) {
+    std::pair<std::vector<std::vector<int>>, bool> res = controler_.MazeSolve(begin_end_);
+    if (res.second) DrawMazeSolution(res.first);
+  }
 }
 
 bool MainWindow::IsCorrectPoints() {
-    for (int i = 0; i < 2; i++) {
-        if (begin_end_[i].first < 0 || begin_end_[i].first >= right_.size()
-                || begin_end_[i].second < 0 || begin_end_[i].second >= right_[0]->size()) {
-            return false;
-        }
+  for (int i = 0; i < 2; i++) {
+    if (begin_end_[i].first < 0 || begin_end_[i].first >= right_.size() ||
+        begin_end_[i].second < 0 || begin_end_[i].second >= right_[0]->size()) {
+      return false;
     }
-    return true;
+  }
+  return true;
 }
 
 void MainWindow::ClearSolution() {
-    while(!solution_items_.empty()) {
-        delete solution_items_.top();
-        solution_items_.pop();
-    }
+  while (!solution_items_.empty()) {
+    if (!solution_items_.empty()) ui->graphicsView->scene()->removeItem(solution_items_.top());
+    delete solution_items_.top();
+    solution_items_.pop();
+  }
 }
 
 void MainWindow::ClearPoints() {
-    begin_end_.clear();
-    while(!point_items_.empty()) {
-        point_items_.pop();
-    }
+  begin_end_.clear();
+  while (!point_items_.empty()) {
+    point_items_.pop();
+  }
 }
