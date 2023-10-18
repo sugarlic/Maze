@@ -1,3 +1,5 @@
+#include <memory>
+
 #include "../../backend/includes/Maze.h"
 
 namespace s21 {
@@ -12,6 +14,6 @@ class Controler {
   std::vector<std::vector<int> *> getDown();
 
  private:
-  s21::Maze *maze_;
+  std::unique_ptr<s21::Maze> maze_;
 };
 }  // namespace s21

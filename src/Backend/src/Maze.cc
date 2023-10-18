@@ -6,6 +6,25 @@
 #include <iostream>
 #include <sstream>
 
+s21::Maze::Maze(const s21::Maze &other) {
+  MatrixInitialization(other.right_.size(), other.right_[0]->size());
+
+  for (int i = 0; i < right_.size(); i++)
+    std::copy(other.right_[i]->begin(), other.right_[i]->end(),
+              right_[i]->begin());
+  for (int i = 0; i < down_.size(); i++)
+    std::copy(other.down_[i]->begin(), other.down_[i]->end(),
+              down_[i]->begin());
+}
+
+s21::Maze::Maze(Maze &&other) {
+  right_ = std::move(other.right_);
+  down_ = std::move(other.down_);
+  other.ClearMaze();
+}
+
+s21::Maze::~Maze() { ClearMaze(); }
+
 void s21::Maze::PerfectMazeGen(int rows, int cols) {
   if ((rows <= 0 || cols <= 0) || rows > 50 || cols > 50)
     throw std::invalid_argument("ERROR");
@@ -46,7 +65,7 @@ void s21::Maze::PerfectMazeGen(int rows, int cols) {
       if (r_num) {
         int num = matrix[i][j];
         int count{};
-        for (int z = 0; z < cols; z++) {
+        for (int z = 0; z < cols && count <= 1; z++) {
           if (matrix[i][z] == num && !down_[i]->operator[](z)) count++;
         }
         if (count > 1) down_[i]->operator[](j) = 1;
@@ -78,6 +97,7 @@ void s21::Maze::ReadMaze(std::string fpath) {
   fin >> rows >> cols;
   if (rows < 1 || rows > 50 || cols < 1 || cols > 50)
     throw std::invalid_argument("INCORRECT FILE");
+
   ClearMaze();
   MatrixInitialization(rows, cols);
   for (int i = 0; i < rows; i++) {
@@ -136,6 +156,30 @@ void s21::Maze::StepWave(std::vector<std::vector<int>> &path, size_t i,
   if (j < path[0].size() - 1 && right_[i]->operator[](j) != 1) {
     StepWave(path, i, j + 1, step + 1);
   }
+}
+
+s21::Maze s21::Maze::operator=(const s21::Maze &other) {
+  if (this == &other) return *this;
+  MatrixInitialization(other.right_.size(), other.right_[0]->size());
+
+  for (int i = 0; i < right_.size(); i++)
+    std::copy(other.right_[i]->begin(), other.right_[i]->end(),
+              right_[i]->begin());
+  for (int i = 0; i < down_.size(); i++)
+    std::copy(other.down_[i]->begin(), other.down_[i]->end(),
+              down_[i]->begin());
+  return *this;
+}
+
+s21::Maze s21::Maze::operator=(s21::Maze &&other) {
+  if (this == &other) return *this;
+  ClearMaze();
+
+  right_ = std::move(other.right_);
+  down_ = std::move(other.down_);
+  other.ClearMaze();
+
+  return *this;
 }
 
 void s21::Maze::SaveMaze() {

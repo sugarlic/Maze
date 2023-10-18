@@ -129,6 +129,7 @@ void MainWindow::mousePressEvent(QMouseEvent* event) {
     if (point_items_.size() > 1) {
       begin_end_.erase(begin_end_.begin());
       scene->removeItem(point_items_.front());
+      delete point_items_.front();
       point_items_.pop();
 
       ClearSolution();
