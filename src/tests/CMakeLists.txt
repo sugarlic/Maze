@@ -1,10 +1,17 @@
-set(LIB_NAME ${P_NAME}_Tests)
-AUX_SOURCE_DIRECTORY(./src ${LIB_NAME}_SRCS)
-file(GLOB_RECURSE ${LIB_NAME}_HEADERS
+AUX_SOURCE_DIRECTORY(./src TEST_SOURCES)
+add_executable(TESTING
+    ${TEST_SOURCES}
+)
+AUX_SOURCE_DIRECTORY(./src MAZE_SRCS)
+file(GLOB_RECURSE MAZE_HEADERS
     includes/*.h
 )
-add_library(${LIB_NAME} STATIC
-    ${${LIB_NAME}_SRCS}
-    ${${LIB_NAME}_HEADERS}
+
+target_link_libraries(TESTING
+    ${P_NAME}_Backend
+    gtest
 )
-target_include_directories(${LIB_NAME} PUBLIC includes)
+
+include(GoogleTest)
+gtest_discover_tests(TESTING)
+add_test(NAME TestMyCode COMMAND TestMyCode)

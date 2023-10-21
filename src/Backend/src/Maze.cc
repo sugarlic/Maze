@@ -9,10 +9,10 @@
 s21::Maze::Maze(const s21::Maze &other) {
   MatrixInitialization(other.right_.size(), other.right_[0]->size());
 
-  for (int i = 0; i < right_.size(); i++)
+  for (size_t i = 0; i < right_.size(); i++)
     std::copy(other.right_[i]->begin(), other.right_[i]->end(),
               right_[i]->begin());
-  for (int i = 0; i < down_.size(); i++)
+  for (size_t i = 0; i < down_.size(); i++)
     std::copy(other.down_[i]->begin(), other.down_[i]->end(),
               down_[i]->begin());
 }
@@ -20,7 +20,6 @@ s21::Maze::Maze(const s21::Maze &other) {
 s21::Maze::Maze(Maze &&other) {
   right_ = std::move(other.right_);
   down_ = std::move(other.down_);
-  other.ClearMaze();
 }
 
 s21::Maze::~Maze() { ClearMaze(); }
@@ -162,10 +161,10 @@ s21::Maze s21::Maze::operator=(const s21::Maze &other) {
   if (this == &other) return *this;
   MatrixInitialization(other.right_.size(), other.right_[0]->size());
 
-  for (int i = 0; i < right_.size(); i++)
+  for (size_t i = 0; i < right_.size(); i++)
     std::copy(other.right_[i]->begin(), other.right_[i]->end(),
               right_[i]->begin());
-  for (int i = 0; i < down_.size(); i++)
+  for (size_t i = 0; i < down_.size(); i++)
     std::copy(other.down_[i]->begin(), other.down_[i]->end(),
               down_[i]->begin());
   return *this;
@@ -177,7 +176,6 @@ s21::Maze s21::Maze::operator=(s21::Maze &&other) {
 
   right_ = std::move(other.right_);
   down_ = std::move(other.down_);
-  other.ClearMaze();
 
   return *this;
 }

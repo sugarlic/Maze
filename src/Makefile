@@ -39,7 +39,11 @@ clean:
 	@cmake --build ${BUILD_PATH} --target clean
 b_t:
 	@cmake --build ${BUILD_PATH}_debug --target TESTING --parallel 8
-tests: build_d b_t open_t
+	
+tests: build
+	@cmake --build ${BUILD_PATH} --target TESTING --parallel 8
+	@./${BUILD_PATH}/exe/TESTING
+
 run: build
 	cd ${BUILD_PATH}${EXE_DIR}/${PROJECT_EXE_PATH} && @$(OPEN_CMD) ${PROJECT_NAME}
 b: build_${PROJECT_NAME}
