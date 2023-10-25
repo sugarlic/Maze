@@ -26,7 +26,7 @@ s21::Maze::~Maze() { ClearMaze(); }
 
 void s21::Maze::PerfectMazeGen(int rows, int cols) {
   if ((rows <= 0 || cols <= 0) || rows > 50 || cols > 50)
-    throw std::invalid_argument("ERROR");
+    throw std::invalid_argument("Not correct maze");
 
   ClearMaze();
   std::vector<std::vector<int>> matrix(rows, std::vector<int>(cols));
@@ -91,11 +91,11 @@ void s21::Maze::PerfectMazeGen(int rows, int cols) {
 
 void s21::Maze::ReadMaze(std::string fpath) {
   std::ifstream fin(fpath);
-  if (!fin.is_open()) throw std::invalid_argument("INCORRECT FILENAME");
+  if (!fin.is_open()) throw std::invalid_argument("Incorrect filename");
   int rows, cols;
   fin >> rows >> cols;
   if (rows < 1 || rows > 50 || cols < 1 || cols > 50)
-    throw std::invalid_argument("INCORRECT FILE");
+    throw std::invalid_argument("Incorrect file");
 
   ClearMaze();
   MatrixInitialization(rows, cols);
@@ -143,18 +143,17 @@ void s21::Maze::StepWave(std::vector<std::vector<int>> &path, size_t i,
   if (path[i][j] != -1) return;
   path[i][j] = step;
 
-  if (i > 0 && down_[i - 1]->operator[](j) != 1) {
+  if (i > 0 && down_[i - 1]->operator[](j) != 1)
     StepWave(path, i - 1, j, step + 1);
-  }
-  if (j > 0 && right_[i]->operator[](j - 1) != 1) {
+
+  if (j > 0 && right_[i]->operator[](j - 1) != 1)
     StepWave(path, i, j - 1, step + 1);
-  }
-  if (i < path.size() - 1 && down_[i]->operator[](j) != 1) {
+
+  if (i < path.size() - 1 && down_[i]->operator[](j) != 1)
     StepWave(path, i + 1, j, step + 1);
-  }
-  if (j < path[0].size() - 1 && right_[i]->operator[](j) != 1) {
+
+  if (j < path[0].size() - 1 && right_[i]->operator[](j) != 1)
     StepWave(path, i, j + 1, step + 1);
-  }
 }
 
 s21::Maze s21::Maze::operator=(const s21::Maze &other) {

@@ -5,7 +5,7 @@
 namespace s21 {
 class Maze {
  public:
-  Maze(){};
+  Maze() = default;
   Maze(const Maze &other);
   Maze(Maze &&other);
   void PerfectMazeGen(int rows, int cols);
