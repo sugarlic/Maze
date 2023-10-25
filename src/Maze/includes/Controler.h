@@ -1,6 +1,6 @@
 #include <memory>
 
-#include "../../backend/includes/Maze.h"
+#include "Maze.h"
 
 namespace s21 {
 class Controler {
